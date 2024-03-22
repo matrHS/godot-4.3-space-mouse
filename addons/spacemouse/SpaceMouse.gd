@@ -1,10 +1,10 @@
 # [Godot Space Mouse]
 # created by Andres Hernandez
-tool
+@tool
 extends EditorPlugin
+var spacemouse = Spacemouse.new()
+#register the spacemouse type
 
-# space mouse library interface
-onready var spacemouse = preload("res://addons/spacemouse/bin/spacemouse.gdns").new()
 # scene for the configuration dock
 var space_dock = null
 # if the device is connected
@@ -42,24 +42,26 @@ var control_type_ui = null
 # name for control type
 const ControlType = {OBJECT_TYPE = 0, CAMERA_TYPE = 1}
 # object or camera control
-var control_type = ControlType.OBJECT_TYPE
+var control_type = ControlType.CAMERA_TYPE
 # adjust fly camera translation
 const adjust_translation = 0.24
 const adjust_rotation = 0.98
 # stored configuration
 var config_data = {}
 
+
 # on start add the configuration dock
 func _enter_tree():
 	# instance the dock
-	space_dock = preload("res://addons/spacemouse/SpaceDock.tscn").instance()
+	space_dock = preload("res://addons/spacemouse/SpaceDock.tscn").instantiate()
+	#add_child(space_dock)
 	# attach signals for ui controls
 	translation_speed_ui = space_dock.get_node("UI/TranslationSpeed")
-	translation_speed_ui.connect("value_changed", self, "update_config")
+	translation_speed_ui.value_changed.connect(update_config)
 	rotation_speed_ui = space_dock.get_node("UI/RotationSpeed")
-	rotation_speed_ui.connect("value_changed", self, "update_config")
+	rotation_speed_ui.value_changed.connect(update_config)
 	control_type_ui = space_dock.get_node("UI/ControlType")
-	control_type_ui.connect("item_selected", self, "update_config")
+	control_type_ui.item_selected.connect(update_config)
 	# add ui dock to the editor slot
 	add_control_to_dock(EditorPlugin.DOCK_SLOT_RIGHT_BL, space_dock)
 	# load the saved configuration
@@ -80,18 +82,16 @@ func save_config_data():
 	config_data["rotation_speed"] = rotation_speed_ui.value
 	config_data["control_type"] = control_type_ui.selected
 	# open the configuration save file
-	var config_file = File.new()
-	config_file.open("user://spacemouse.config", File.WRITE)
+	var config_file = FileAccess.open("user://plugin.config", FileAccess.WRITE)
 	# write the data for the configuration
 	config_file.store_var(config_data)
 
 # load saved settings
 func load_config_data():
 	# attempt to load and exit is file not found
-	var config_file = File.new()
-	if not config_file.file_exists("user://spacemouse.config"):
+	var config_file = FileAccess.open("user://plugin.config", FileAccess.READ)
+	if config_file == null:
 		return
-	config_file.open("user://spacemouse.config", File.READ)
 	# store the loaded config values
 	config_data = config_file.get_var()
 	# set the ui to the loaded config
@@ -114,7 +114,7 @@ func _exit_tree():
 func _ready():
 	# get access to the editor and viewport
 	editor = get_editor_interface()
-	var viewport = editor.get_editor_viewport()
+	var viewport = editor.get_editor_viewport_3d()
 	# find all the editor cameras available
 	var cameras = find_camera(viewport, [])
 	if cameras.size() > 0:
@@ -129,13 +129,15 @@ func _ready():
 func _process(delta):
 	# make sure we are connected and then poll for the latest motion
 	if is_instance_valid(camera) and connected and spacemouse.has_method("poll") \
-			and spacemouse.poll() and !editor.is_playing_scene():
+		and spacemouse.poll() and !editor.is_playing_scene():
+		if camera.get_projection() == 1:
+			return null
 		# set the rotation pivot to the origin of the world
 		select_origin = Vector3.ZERO
 		# check for a selected object and set pivot to object center
 		if is_instance_valid(selection):
 			var selected = selection.get_selected_nodes()
-			if selected.size() > 0 and selected[0] is Spatial:
+			if selected.size() > 0 and selected[0] is Node3D:
 				select_origin = selected[0].transform.origin
 		# obtain the raw translation and rotation values from the device
 		space_translation = spacemouse.translation() * flip
@@ -151,7 +153,7 @@ func _process(delta):
 			offset_speed = (select_origin.distance_to(camera_origin) / 8.0) + 0.01
 			offset_speed = clamp(offset_speed, 0.01, 8.0)
 			# transform translation into camera local space
-			space_translation = camera_transform.xform(space_translation)
+			space_translation = camera_transform * space_translation
 			# adjust the raw readings into reasonable speeds and apply delta
 			space_translation *= translate_speed * offset_speed * delta;
 			space_rotation *= rotate_speed * delta
@@ -173,7 +175,7 @@ func _process(delta):
 			camera_transform = camera_transform.rotated(camera_transform.basis.y.normalized(), -space_rotation.y)
 			camera_transform = camera_transform.rotated(camera_transform.basis.z.normalized(), -space_rotation.z)
 			# transform translation into camera local space
-			space_translation = camera_transform.xform(space_translation)
+			space_translation = camera_transform * space_translation
 			# move the camera back to the original position
 			camera_transform.origin = camera_origin - space_translation
 		# apply the updated temporary transform to the actual viewport camera
@@ -184,12 +186,13 @@ func find_camera(node, list) :
 	# make sure to only check viewports
 	if node is Viewport:
 		# get the camera, check it's 3D, and make sure it's not a user created camera
-		var camera = node.get_camera()
-		if is_instance_valid(camera) and camera is Camera and "@" in camera.name:
-			# it's a valid camera, so add it to the list
+		var camera = node.get_camera_3d()
+			# import the Camera class from the godot module
+		if is_instance_valid(camera) and camera is Camera3D and "@" in camera.name:
+		# it's a valid camera, so add it to the list
 			list.append(camera)
-			# we found a camera, so we can return
-			return list
+		# we found a camera, so we can return
+		return list
 	# check all the children of this node recursively
 	for child in node.get_children():
 		find_camera(child, list)

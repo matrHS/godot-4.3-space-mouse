@@ -1,71 +1,67 @@
-[gd_scene format=2]
+[gd_scene format=3 uid="uid://dw1ho4fqewmf3"]
 
 [node name="Space" type="Control"]
+layout_mode = 3
+anchor_left = 0.675
+anchor_top = 0.576
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 0.399963
+offset_top = -0.248016
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="UI" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -64.0
-margin_right = 64.0
+offset_right = 154.0
+offset_bottom = -76.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="SpacerTop" type="Control" parent="UI"]
-margin_right = 128.0
-margin_bottom = 6.0
-rect_min_size = Vector2( 0, 6 )
+layout_mode = 2
 
 [node name="TranslationLabel" type="Label" parent="UI"]
-margin_top = 10.0
-margin_right = 128.0
-margin_bottom = 24.0
+layout_mode = 2
 text = "Translation Speed:"
 
 [node name="TranslationSpeed" type="HSlider" parent="UI"]
-margin_top = 28.0
-margin_right = 128.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 128, 22 )
+layout_mode = 2
 max_value = 200.0
 value = 100.0
 rounded = true
 tick_count = 3
 
 [node name="RotationLabel" type="Label" parent="UI"]
-margin_top = 54.0
-margin_right = 128.0
-margin_bottom = 68.0
+layout_mode = 2
 text = "Rotation Speed:"
 
 [node name="RotationSpeed" type="HSlider" parent="UI"]
-margin_top = 72.0
-margin_right = 128.0
-margin_bottom = 94.0
-rect_min_size = Vector2( 128, 22 )
+layout_mode = 2
 max_value = 200.0
 value = 100.0
 rounded = true
 tick_count = 3
 
 [node name="SpacerMid" type="Control" parent="UI"]
-margin_top = 98.0
-margin_right = 128.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 0, 2 )
+layout_mode = 2
 
 [node name="ControlType" type="OptionButton" parent="UI"]
-margin_top = 104.0
-margin_right = 128.0
-margin_bottom = 128.0
-rect_min_size = Vector2( 128, 24 )
-text = "Object Mode"
-items = [ "Object Mode", null, false, 0, null, "Camera Mode", null, false, 1, null ]
-selected = 0
+layout_mode = 2
+item_count = 2
+selected = 1
+popup/item_0/text = "Object Mode"
+popup/item_0/id = 0
+popup/item_1/text = "Camera Mode"
+popup/item_1/id = 1
 
 [node name="SpacerBottom" type="Control" parent="UI"]
-margin_top = 132.0
-margin_right = 128.0
-margin_bottom = 1080.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
