@@ -1,52 +1,21 @@
-# Godot Space Mouse : Plug-In For Godot Engine
-Plug-in to add support for 3Dconnexion Space Mouse and Space Navigator 3D mice input devices. Control the Godot Engine editor viewport camera with 6DOF (6 degrees of freedom). Freely translate the camera position and also rotate along the yaw, pitch, and roll axes. Currently supporting Godot 3.4.4.
+# WIP Godot 4.2 port of Cyberreality's 6DOF input device support 
+### - Bundled library is only compiled for windows, feel free to contribute libraries for other platforms.
+### - only supports perspective mode, I have disabled inputs while in orthogonal projection mode due to bugs
+### - Updates will be slow, as I had no GDExtension experience prior to this project.
 
-![Screenshot](screenshots/Godot_Space_Mouse_Promo.jpg)
+## Building from source 
+You need Scons, godot-cpp (GDExtension) and the HIDAPI library
+Update the bundeled Sconstruct to locate the HIDAPI library you downloaded, and build the godot-cpp repo to create the headers for GDExtension.
+Then build the Spacemouse sconstruct.
+The library will be placed inside the addons/bin ready to be used.
 
-## INSTALLATION
-
-[Click Here to Download the Latest Release](https://github.com/cybereality/godot-space-mouse/releases/latest)
-
-For manual install, download the `addons` folder from this repository and copy it into your Godot project.
-
-## CONFIGURATION
-
-* Place the `addons` folder, with all contents, into your Godot project root directory.
-* To enable the plug-in, click `Project` `Project Settings` `Plugins` and check `Enable` next to the `Godot Space Mouse` entry.
-* Use the `Space` dock in the editor to adjust speed or change to object or camera control.
-* The 3Dconnexion driver is not needed on any OS. However, if you're on Windows, and have the driver installed, please first open the Godot editor, then open the 3Dconnexion app. You'll see a pop-up with the name of the Godot editor executable. Click `Advanced Settings`, then disable all navigation and zoom controls, as these can conflict with the viewport controls.
-* If you are using a wireless Space Mouse, on Windows, you'll have to make sure only the correct HID device is enabled for the plug-in. First do a Windows Update, and check the Optional Updates for the 3Dconnexion driver. Then open `Device Manager`, click `View` `Devices by container`. You should see an entry for `3Dconnexion Universal Receiver` and underneath `3Dconnexion Wireless Device` which is the driver we just installed. Below that, there may be around 6 entries for `HID-compliant vendor-defined device`. Right-click on each of those and disable them. You will have to click `Yes`, but don't choose `Restart`. Wait until you have disabled all those on the list, then restart your machine.
-![Screenshot](screenshots/Godot_Space_Mouse_Win_Fix.jpg)
-* On Linux you will need to allow HID access via udev rules. First, download the file `70-space-mouse.rules` from the `addons/spacemouse/bin/` folder and place this file in the correct directory for your distro, such as `/etc/udev/rules.d/`. Then replug your Space Mouse hardware or run `sudo udevadm control --reload-rules && sudo udevadm trigger` to update the rules. For Ubuntu, or related distros, please run this on the command line: `sudo apt install libhidapi-hidraw0`.
-* For macOS, you must uninstall the 3Dconnexion drivers, as they're incompatible with the plug-in.
-* Please note, a Space Mouse or Space Navigator hardware device from 3Dconnexion is required.
-
-## BUILDING FROM SOURCE
-
-* Download `libspacemouse.c` from the `src` folder.
-* Get dependencies for [Godot GDNative](https://docs.godotengine.org/en/stable/tutorials/scripting/gdnative/gdnative_c_example.html) and [HIDAPI](https://github.com/libusb/hidapi). 
-
-### WINDOWS
-
-* `cl /Folibspacemouse.obj /c libspacemouse.c /nologo -EHsc -DNDEBUG /MD /I ..\godot-headers /I ..\hidapi-win\include`
-* `link /nologo /dll /out:libspacemouse.dll /implib:libspacemouse.lib libspacemouse.obj /LIBPATH:..\hidapi-win\x64 hidapi.lib`
-
-### LINUX
-
-* `gcc -std=c11 -fPIC -c -I ../godot-headers -I /usr/include/hidapi libspacemouse.c -o libspacemouse.o`
-* `gcc -shared libspacemouse.o -o libspacemouse.so -lhidapi-hidraw`
-
-### MAC
-
-* `gcc -std=c11 -fPIC -c -I ../godot-headers -I ../hidapi-hidapi-0.12.0/hidapi -I ../hidapi-hidapi-0.12.0/mac libspacemouse.c -o libspacemouse.o`
-* `gcc -shared libspacemouse.o -o libspacemouse.dylib -L . -lhidapi.0`
-* `install_name_tool -change @rpath/libhidapi.0.dylib @loader_path/libhidapi.0.dylib libspacemouse.dylib`
+lastly update the spacemouse.GDExtension to include the path for the library suited for your platform. 
 
 ## LICENSE
 
 MIT License
 
-Copyright (c) 2022 Andres Hernandez
+Copyright (c) 2024 Marco André Hansen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
