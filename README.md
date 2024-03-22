@@ -5,8 +5,11 @@
 
 ## Building from source 
 You need Scons, godot-cpp (GDExtension) and the HIDAPI library
+
 Update the bundeled Sconstruct to locate the HIDAPI library you downloaded, and build the godot-cpp repo to create the headers for GDExtension.
+
 Then build the Spacemouse sconstruct.
+
 The library will be placed inside the addons/bin ready to be used.
 
 lastly update the spacemouse.GDExtension to include the path for the library suited for your platform. 
