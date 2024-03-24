@@ -18,7 +18,7 @@ lastly update the spacemouse.GDExtension to include the path for the library sui
 
 MIT License
 
-Copyright (c) 2024 Marco André Hansen
+Copyright (c) 2024 Andres Hernandez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
