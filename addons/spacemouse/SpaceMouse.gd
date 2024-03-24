@@ -54,7 +54,6 @@ var config_data = {}
 func _enter_tree():
 	# instance the dock
 	space_dock = preload("res://addons/spacemouse/SpaceDock.tscn").instantiate()
-	#add_child(space_dock)
 	# attach signals for ui controls
 	translation_speed_ui = space_dock.get_node("UI/TranslationSpeed")
 	translation_speed_ui.value_changed.connect(update_config)
