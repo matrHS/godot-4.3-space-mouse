@@ -15,8 +15,8 @@ env = SConscript("godot-cpp/SConstruct")
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
-env.Append(CPPPATH=["hidapi/hidapi"])  # Add the path to hidapi headers
-env.Append(LIBPATH=["hidapi/windows/x64/Release"])  # Add the path to hidapi library
+env.Append(CPPPATH=["hidapi-win/include"])  # Add the path to hidapi headers
+env.Append(LIBPATH=["hidapi-win/x64"])  # Add the path to hidapi library
 env.Append(LIBS=["hidapi"])  # Link against hidapi library
 
 if env["platform"] == "macos":

@@ -1,7 +1,8 @@
-# WIP Godot 4.2 port of Cyberreality's 6DOF input device support 
-### - Bundled library is only compiled for windows, feel free to contribute libraries for other platforms.
-### - only supports perspective mode, I have disabled inputs while in orthogonal projection mode due to bugs
-### - Updates will be slow, as I had no GDExtension experience prior to this project.
+# Forked from MrVolans and recompiled for Godot 4.3
+
+- Bundled library is only compiled for windows, feel free to contribute libraries for other platforms.
+- only supports perspective mode, inputs are disabled while in orthogonal projection mode due to bugs
+- Updates will be slow, as I had no GDExtension experience prior to this project.
 
 ## Building from source 
 You need Scons, godot-cpp (GDExtension) and the HIDAPI library
@@ -14,11 +15,14 @@ The library will be placed inside the addons/bin ready to be used.
 
 lastly update the spacemouse.GDExtension to include the path for the library suited for your platform. 
 
+When building with Scons it is likely that the libraries will be placed under "spacemouse_test/addons/spacemouse", if not they will be located under "addons/bin"
+
 ## LICENSE
 
 MIT License
 
 Copyright (c) 2024 Andres Hernandez
+Copyright (c) 2024 Matthew Hunt
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

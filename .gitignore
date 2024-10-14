@@ -1,10 +1,12 @@
 # Godot 4+ specific ignores
 .godot/
+godot-cpp/*
 
 # Godot-specific ignores
 .import/
 export.cfg
 export_presets.cfg
+testspacemouse/
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -13,3 +15,9 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+.vscode/*
+.sconsign.dblite
+hidapi-win/*
+
+*.o
